@@ -52,9 +52,16 @@ func getLocalData(data *[]byte) (ACTrackerData, error) {
 	return acTrackerData, err
 }
 
+// GetStoredACTrackingData returns ACTrackerData stored in local file
+func GetStoredACTrackingData() (ACTrackerData, error) {
+	body, readFileErr := readObjectsFromMemory()
+	GeneralErr(readFileErr, "prompt#GetStoredACTrackingData Error: Failed to read from local file.")
+	return getLocalData(&body)
+}
+
 // WriteObjectToMemory takes a struct and saves it to the a file in the local directory
 func WriteObjectToMemory(obj Saver) error {
-	allData, readErr := ReadObjectsFromMemory()
+	allData, readErr := readObjectsFromMemory()
 	GeneralErr(readErr, "Failed to read from local file")
 	localFile := GetFileHandler(LocalFile, os.O_WRONLY)
 	defer localFile.Close()
@@ -66,7 +73,7 @@ func WriteObjectToMemory(obj Saver) error {
 }
 
 // ReadObjectsFromMemory loads local file and unmarshals data into object
-func ReadObjectsFromMemory() ([]byte, error) {
+func readObjectsFromMemory() ([]byte, error) {
 	localFile := GetFileHandler(LocalFile, os.O_RDONLY)
 	defer localFile.Close()
 	data, err := ioutil.ReadAll(localFile)

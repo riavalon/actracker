@@ -5,6 +5,9 @@ import (
 	"fmt"
 	"io"
 	"runtime"
+	"strings"
+
+	"github.com/logrusorgru/aurora"
 )
 
 // Story object representing one ticket from a sprint
@@ -12,6 +15,12 @@ type Story struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"desc"`
+}
+
+func (s Story) String() string {
+	id := aurora.Bold(aurora.Yellow(fmt.Sprintf("[%v]", s.ID)))
+	name := aurora.Bold(fmt.Sprintf("%v", strings.Title(s.Name)))
+	return fmt.Sprintf("%v - %v", id, name)
 }
 
 // Save serializes story into JSON format and saves to writer
@@ -34,5 +43,12 @@ func AddStory() {
 
 // ListStories list all stories saved in local file
 func ListStories() {
-	// tbi
+	Clear[runtime.GOOS]()
+	data, err := GetStoredACTrackingData()
+	GeneralErr(err, "ListStories Error: Failed to read objects from memory.")
+	fmt.Println(aurora.Bold(aurora.Cyan("Showing all saved stories\n")))
+	// fmt.Println(aurora.Underline(aurora.Green("Sprint 13")))
+	for _, story := range data.Stories {
+		fmt.Println(story)
+	}
 }

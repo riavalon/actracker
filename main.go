@@ -51,6 +51,10 @@ func add(arg string) {
 	}
 }
 
+func show() {
+	ListStories()
+}
+
 func main() {
 	ArgumentErr(len(os.Args) == 1, "Need at least one command arg.")
 
@@ -60,6 +64,9 @@ func main() {
 		add(os.Args[2])
 	case "add":
 		fmt.Println("add command called")
+	case "show":
+		// for now we just show all items regardless of what "sprint" they are apart of
+		show()
 	default:
 		fmt.Printf("Unknown command: %s\n", os.Args[1])
 	}
