@@ -14,6 +14,14 @@ func ArgumentErr(predicate bool, err string) {
 	}
 }
 
+// NotFoundErr if predicate is true, exit program with non-zero status code
+func NotFoundErr(predicate bool, errMessage string) {
+	if predicate {
+		fmt.Printf("NotFoundErr: %v\n", errMessage)
+		os.Exit(1)
+	}
+}
+
 // GeneralErr exits with non-zero status code if non-nil err passed in
 func GeneralErr(err error, errMessage string) {
 	if err != nil {

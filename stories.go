@@ -15,12 +15,27 @@ type Story struct {
 	ID          string `json:"id"`
 	Name        string `json:"name"`
 	Description string `json:"desc"`
+	AC          ACList `json:"acceptanceCriteria"`
 }
 
 func (s Story) String() string {
 	id := aurora.Bold(aurora.Yellow(fmt.Sprintf("[%v]", s.ID)))
 	name := aurora.Bold(fmt.Sprintf("%v", strings.Title(s.Name)))
-	return fmt.Sprintf("%v - %v", id, name)
+	desc := aurora.Italic(aurora.Magenta(s.Description))
+	var listedAC []string
+	for idx, ac := range s.AC.Items {
+		listedAC = append(listedAC, fmt.Sprintf("\t%v. %v", idx+1, ac.Task))
+	}
+	var acString string
+	if len(listedAC) != 0 {
+		acString = strings.Join(listedAC, "\n") + "\n\n"
+	}
+	return fmt.Sprintf(
+		"%s\n%s\n%s",
+		fmt.Sprintf("%v - %v", id, name),
+		desc,
+		acString,
+	)
 }
 
 // Save serializes story into JSON format and saves to writer

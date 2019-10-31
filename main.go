@@ -45,7 +45,8 @@ func add(arg string) {
 	case "story":
 		AddStory()
 	case "ac":
-		fmt.Println("add AC")
+		ArgumentErr(len(os.Args) < 4, "Must specify StoryID to add AC for.\nUsage: `actracker new AC RE-360`")
+		AddACToStory(os.Args[3])
 	default:
 		ArgumentErr(true, fmt.Sprintf("Invalid option: %s", arg))
 	}
@@ -59,11 +60,9 @@ func main() {
 	ArgumentErr(len(os.Args) == 1, "Need at least one command arg.")
 
 	switch strings.ToLower(os.Args[1]) {
-	case "new":
+	case "add":
 		ArgumentErr(len(os.Args) < 3, "Must specify what `new` is creating. (Hint: story, AC...)")
 		add(os.Args[2])
-	case "add":
-		fmt.Println("add command called")
 	case "show":
 		// for now we just show all items regardless of what "sprint" they are apart of
 		show()
